@@ -1,0 +1,30 @@
+<div class="container my-4 d-flex flex-column align-items-center">
+
+  <h1 class="mb-4 text-center w-100" style="max-width: 720px;">My wishlist</h1>
+
+  <app-paging-header
+    [totalCount]="totalCount"
+    [pageSize]="shopParams.pageSize"
+    [pageNumber]="shopParams.pageNumber"
+    class="w-100"
+    style="max-width: 720px;"
+  ></app-paging-header>
+
+  <div class="d-flex flex-column gap-4 w-100" style="max-width: 720px;">
+    <div *ngFor="let track of tracks" style="width: 100%;">
+      <app-wishlist-item
+        [track]="track"
+        (itemRemoved)="onItemRemoved()"
+      ></app-wishlist-item>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-center mt-4 w-100" style="max-width: 720px;">
+    <app-pager
+      [pageSize]="shopParams.pageSize"
+      [totalCount]="totalCount"
+      (pageChanged)="onPageChanged($event)"
+    ></app-pager>
+  </div>
+
+</div>

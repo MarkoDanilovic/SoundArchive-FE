@@ -1,0 +1,38 @@
+<div class="container">
+  <div class="row">
+    <section class="col-3">
+
+      <h5 class="text-warning ml-3">Sort</h5>
+      <select class="custom-select mb-3" (change)="onSortSelected($any($event.target).value)">
+        <option *ngFor="let sort of sortOptions" [value]="sort.value">{{sort.name}}</option>
+      </select>
+
+    </section>
+    <section class="col-9">
+      <div class="justify-content-between align-items-center pb-2"></div>
+      <app-paging-header [totalCount]="totalCount" [pageSize]="this.artistParams.size" [pageNumber]="this.artistParams.page"></app-paging-header>
+
+      <div class="form-inline mt-2">
+        <input class="form-control mr-2" (keyup.enter)="onSearch()" #search style="width: 300px" placeholder="Search artist" type="text">
+        <button class="btn btn-outline-primary my-2"  (click)="onSearch()">Search</button>
+        <button class="btn btn-outline-success ml-2 my-2" (click)="onReset()">Reset</button>
+      </div>
+      <div class="row">
+        <div class="col-4 mb-4" *ngFor="let artist of artists">
+          <app-artist-item [artist]="artist"></app-artist-item>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center">
+        <app-pager
+          [pageSize]="artistParams.size"
+          [totalCount]="totalCount"
+          (pageChanged)="onPageChanged($event)"
+        ></app-pager>
+
+      </div>
+
+    </section>
+
+  </div>
+</div>
+

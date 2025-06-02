@@ -1,0 +1,29 @@
+<div class="d-flex" style="height: 100vh;">
+  <!-- Sidebar -->
+  <nav class="bg-dark text-white p-3" style="width: 250px;">
+    <h4>Admin Panel</h4>
+    <ul class="nav flex-column mt-4">
+      <li class="nav-item mb-2">
+        <a routerLink="/admin/users" routerLinkActive="active" class="btn btn-outline-light w-100">Users</a>
+      </li>
+      <li class="nav-item mb-2">
+        <a routerLink="/admin/orders" routerLinkActive="active" class="btn btn-outline-light w-100">Orders</a>
+      </li>
+      <li class="nav-item mb-2">
+        <a routerLink="/admin/tracks" routerLinkActive="active" class="btn btn-outline-light w-100">Tracks</a>
+      </li>
+      <li class="nav-item mb-2">
+        <a routerLink="/admin/mediums" routerLinkActive="active" class="btn btn-outline-light w-100">Mediums</a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/admin/genres" routerLinkActive="active" class="btn btn-outline-light w-100">Genres</a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="flex-grow-1 p-4">
+    <h2>Welcome administrator {{ username }}!</h2>
+    <router-outlet></router-outlet>
+  </div>
+</div>

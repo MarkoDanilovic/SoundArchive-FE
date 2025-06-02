@@ -1,0 +1,39 @@
+<div *ngIf="track">
+  <div class="col-6">
+    <img src="{{ track.picture ? imageBaseUrl + track.picture : '/assets/discogs.png' }}" alt="{{track.name}}" class="img-fluid w-100">
+  </div>
+  <div class="col-6">
+    <h3>Track name : {{track.name}}</h3>
+    <div class="d-flex justify-content-start align-items-center">
+      <button
+        class="btn btn-lg ml-5"
+        [ngClass]="{'btn-primary': !isInWishlist, 'btn-outline-secondary': isInWishlist}"
+        (click)="isInWishlist ? removeTrackFromWishlist(track.id) : addTrackToWishlist(track.id)">
+        {{ isInWishlist ? 'Remove from wishlist' : 'Add to wishlist' }}
+      </button>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-12 ml-3">
+      <h4>Description</h4>
+      <p>Genre: {{track.genre.name}}</p>
+      <p>Artist: {{track.artist.artistName}}</p>
+      <p>Publish date: {{ track.publishDate | date:'dd.MM.yyyy' }}</p>
+      <p>Duration: {{track.duration}}</p>
+
+      <div class="row">
+        <div class="col-3 mb-3" *ngFor="let record of track.records">
+          <div class="p-3 border bg-light">
+            <p>Medium: {{record.medium.name}}</p>
+            <p>- Price: {{record.price | currency}}</p>
+            <p>- Quantity: {{record.quantity}}</p>
+            <button class="btn btn-outline-secondary btn-lg ml-5" (click)="addToCart(track.id, record.medium.id)">Add to cart</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+

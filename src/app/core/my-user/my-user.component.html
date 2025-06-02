@@ -1,0 +1,25 @@
+<div class="text-center mb-4">
+  <h3>My user information</h3>
+</div>
+
+<div class="d-flex justify-content-center">
+  <div *ngIf="userData" class="text-start">
+    <p><strong>First Name:</strong> {{ userData.firstName }}</p>
+    <p><strong>Last Name:</strong> {{ userData.lastName }}</p>
+    <p><strong>Date of Birth:</strong> {{ userData.dateOfBirth | date:'dd.MM.yyyy' }}</p>
+    <p><strong>Email:</strong> {{ userData.email }}</p>
+    <p><strong>Description:</strong> {{ userData.description }}</p>
+    <p><strong>Social Media Link:</strong> {{ userData.socialMediaLink }}</p>
+    <p><strong>Phone Number:</strong> {{ userData.phoneNumber }}</p>
+    <p><strong>Address:</strong> {{ userData.address }}</p>
+    <p><strong>City:</strong> {{ userData.city }}</p>
+    <p><strong>Country:</strong> {{ userData.country }}</p>
+    <p><strong>Username:</strong> {{ userData.username }}</p>
+  </div>
+</div>
+
+<div class="text-center mt-4">
+  <button class="btn btn-primary me-4" (click)="updateUser()">Update user information</button>
+  <button class="btn btn-secondary" (click)="changePassword()">Change password</button>
+  <button class="btn btn-success" *ngIf="!isArtist()" (click)="createArtist()">Become an artist</button>
+</div>

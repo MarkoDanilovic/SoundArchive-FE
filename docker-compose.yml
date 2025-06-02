@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./client  # Path to your Angular app
+    ports:
+      - "8084:80"  # Expose frontend on port 8084, mapped to port 80 inside container
+    networks:
+      - frontend-backend-network
+
+networks:
+  frontend-backend-network:
+    driver: bridge

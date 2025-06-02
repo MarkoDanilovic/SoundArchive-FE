@@ -1,0 +1,59 @@
+<ng-container *ngIf="cart?.items?.length > 0">
+  <div class="container">
+    <div class="card-table">
+      <div class="cart-product">
+        <table class="table table-responsive">
+          <thead>
+          <tr>
+            <th>Name</th>
+            <th>Artist</th>
+            <th>Medium</th>
+            <th>Duration</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Actions</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let item of cart.items">
+            <td>{{ item.track?.name }}</td>
+            <td>{{ item.track?.artist?.artistName }}</td>
+            <td>{{ item.track?.records?.[0]?.medium?.name }}</td>
+            <td>{{ item.track?.duration }}</td>
+            <td>{{ item.itemQuantity }}</td>
+            <td>{{ item.price | currency }}</td>
+            <td>
+              <button class="btn btn-sm btn-success" (click)="addItem(item)">+</button>
+              <button class="btn btn-sm btn-warning" (click)="removeItem(item)">-</button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <h4>Total Price: {{ cart.subtotal | currency }}</h4>
+    <div class="d-flex gap-2">
+      <!-- Order Button -->
+      <button class="btn btn-primary" (click)="placeOrder()">Order</button>
+
+      <button class="btn"
+              [ngClass]="isReserved ? 'btn-danger' : 'btn-outline-secondary'"
+              (click)="isReserved ? unreserveCart() : reserveCart()">
+        {{ isReserved ? 'Remove reservation' : 'Reserve for 24h' }}
+      </button>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="getCartItemCount() === 0">
+  <div class="container">
+    <div class="card">
+      <h5 class="card-title">My Cart</h5>
+    </div>
+    <div class="center">
+      <h4>Your cart is empty</h4>
+      <h6>Add item now</h6>
+      <button class="btn btn-primary" routerLink="/shop">Go to shop</button>
+    </div>
+  </div>
+</ng-container>

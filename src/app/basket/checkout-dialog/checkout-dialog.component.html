@@ -1,0 +1,32 @@
+<form [formGroup]="submitForm" (ngSubmit)="onSubmit()">
+  <div>
+<!--    <label for="firstname">First Name</label>-->
+<!--    <input type="text"  class="form-control" id="firstName" formControlName="firstName" placeholder="Zoran">-->
+
+<!--    <label for="lastname">Last Name</label>-->
+<!--    <input type="name" class="form-control" id="lastname" formControlName="lastName" placeholder="Mihajlovic">-->
+
+    <label for="address">Address </label>
+    <input type="name" class="form-control" id="address" formControlName="address" placeholder="Kursulina 21" >
+
+    <label for="city">City</label>
+    <input type="name" class="form-control" id="city" formControlName="city" placeholder="Bečej" >
+
+    <label>Payment Method</label>
+    <select class="form-control form-control-sm" formControlName="paymentMethod" >
+      <option>Online</option>
+      <option>On receive</option>
+    </select>
+
+    <div class="form-group">
+      <label for="comment">Comment</label>
+      <textarea class="form-control" id="comment" rows="3" formControlName="comment" placeholder="I am available from 9-17h" ></textarea>
+    </div>
+  </div>
+  <button class="btn btn-primary" type="submit" >Confirm</button>
+
+
+
+</form>
+
+

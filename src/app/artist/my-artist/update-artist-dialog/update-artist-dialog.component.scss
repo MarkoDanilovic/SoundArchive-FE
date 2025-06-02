@@ -1,0 +1,6 @@
+::ng-deep .mat-dialog-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* This aligns the dialog to the top, but you can adjust */
+  margin-top: 100px; /* Adjust to create space */
+}

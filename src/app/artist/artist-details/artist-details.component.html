@@ -1,0 +1,42 @@
+<div *ngIf="artist">
+  <div class="col-6">
+    <img src="{{ artist.picture ? imageBaseUrl + artist.picture : '/assets/discogs.png' }}" alt="{{artist.artistName}}" class="img-fluid w-100">
+  </div>
+  <div class="col-6">
+    <h3>Artist name : {{artist.artistName}}</h3>
+    <div class="d-flex justify-content-start align-items-center">
+
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-12 ml-3">
+      <h4>Description</h4>
+      <p>First name: {{artist.firstName}}</p>
+      <p>Last name: {{artist.lastName}}</p>
+      <p>Birthday: {{ artist.birthday | date:'dd.MM.yyyy' }}</p>
+      <p>Country: {{artist.country}}</p>
+
+    </div>
+  </div>
+
+  <section class="col-9">
+    <div class="justify-content-between align-items-center pb-2"></div>
+    <app-paging-header [totalCount]="totalCount" [pageSize]="this.shopParams.pageSize" [pageNumber]="this.shopParams.pageNumber"></app-paging-header>
+
+    <div class="row">
+      <div class="col-4 mb-4" *ngFor="let track of tracks">
+        <app-track-item [track]="track"></app-track-item>
+      </div>
+    </div>
+    <div class="d-flex justify-content-center">
+      <app-pager
+        [pageSize]="shopParams.pageSize"
+        [totalCount]="totalCount"
+        (pageChanged)="onPageChanged($event)"
+      ></app-pager>
+
+    </div>
+
+  </section>
+
+</div>

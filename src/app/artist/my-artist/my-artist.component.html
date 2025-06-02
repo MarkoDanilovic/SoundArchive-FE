@@ -1,0 +1,30 @@
+<div *ngIf="artistData; else noArtist" class="artist-info text-start container mt-4">
+  <h3 class="mb-4">My Artist Profile</h3>
+
+  <div class="row">
+    <div class="col-md-4">
+      <img
+        [src]="artistData?.picture ? imageBaseUrl + artistData.picture : '/assets/discogs.png'"
+        alt="{{ artistData?.artistName }}"
+        class="img-fluid w-100">
+    </div>
+
+    <div class="col-md-8">
+      <p><strong>Artist Name:</strong> {{ artistData.artistName }}</p>
+      <p><strong>First Name:</strong> {{ artistData.firstName }}</p>
+      <p><strong>Last Name:</strong> {{ artistData.lastName }}</p>
+      <p><strong>Birthday:</strong> {{ artistData.birthday | date:'dd.MM.yyyy' }}</p>
+      <p><strong>Country:</strong> {{ artistData.country }}</p>
+    </div>
+
+    <div class="text-end mt-3">
+      <button class="btn btn-primary" (click)="updateArtist()">Update Artist</button>
+    </div>
+  </div>
+</div>
+
+<ng-template #noArtist>
+  <div class="alert alert-warning mt-4" role="alert">
+    You are not registered as an artist.
+  </div>
+</ng-template>
