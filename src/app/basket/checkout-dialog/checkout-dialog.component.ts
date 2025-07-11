@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import {getDate} from "ngx-bootstrap/chronos/utils/date-getters";
-import {FormControl, FormGroup} from "@angular/forms";
-import {BasketService} from "../basket.service";
-import {BasketComponent} from "../basket.component";
+import {Component, Inject, OnInit} from '@angular/core';
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {Cart} from "../../shared/models/cart";
 
 @Component({
   selector: 'app-checkout-dialog',
@@ -10,25 +9,37 @@ import {BasketComponent} from "../basket.component";
   styleUrls: ['./checkout-dialog.component.scss']
 })
 export class CheckoutDialogComponent implements OnInit {
+  submitForm: FormGroup;
 
-  submitForm: FormGroup
-
-  constructor( private cartService: BasketService) { }
+  constructor(
+    private fb: FormBuilder,
+    private dialogRef: MatDialogRef<CheckoutDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { cart: Cart }
+  ) {}
 
   ngOnInit(): void {
-    this.submitForm = new FormGroup({
-      // firstName : new FormControl(),
-      // lastName : new FormControl(),
-      address : new FormControl(),
-      city : new FormControl(),
-      comment : new FormControl(),
-      paymentMethod : new FormControl()
-    })
+    const cart = this.data?.cart ?? {} as Cart;
+
+    this.submitForm = this.fb.group({
+      address: [cart.address ?? '', Validators.required],
+      city: [cart.city ?? '', Validators.required],
+      country: [cart.country ?? '', Validators.required],
+      postalCode: [cart.postalCode ?? '', Validators.required],
+      paymentMethod: [cart.paymentMethod ?? '', Validators.required],
+      comment: [cart.comment ?? '']
+    });
   }
 
-  onSubmit(){
-     console.log(this.submitForm)
-     //this.cartService.addCart(this.submitForm);
-  }
+  onSubmit(): void {
+    if (this.submitForm.invalid) return;
 
+    const formValues = this.submitForm.value;
+
+    const updatedCart: Cart = {
+      ...this.data.cart,
+      ...formValues
+    };
+
+    this.dialogRef.close(updatedCart);
+  }
 }

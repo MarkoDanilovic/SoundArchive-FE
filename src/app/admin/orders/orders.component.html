@@ -1,1 +1,120 @@
-<p>orders works!</p>
+<div class="form-inline mb-3">
+  <label class="mr-2">Status:</label>
+  <select class="form-control" [(ngModel)]="searchParams.status" (change)="onStatusChange()">
+    <option value="">All</option>
+    <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
+  </select>
+</div>
+
+<table mat-table [dataSource]="orders" multiTemplateDataRows class="mat-elevation-z2 w-100" style="overflow: hidden;">
+
+  <!-- ID Column -->
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef> Order ID </th>
+    <td mat-cell *matCellDef="let order"> {{ order.id }} </td>
+  </ng-container>
+
+  <!-- Order Date Column -->
+  <ng-container matColumnDef="orderDate">
+    <th mat-header-cell *matHeaderCellDef> Date </th>
+    <td mat-cell *matCellDef="let order"> {{ order.orderDate | date: 'short' }} </td>
+  </ng-container>
+
+  <!-- Address Column -->
+  <ng-container matColumnDef="address">
+    <th mat-header-cell *matHeaderCellDef> Address </th>
+    <td mat-cell *matCellDef="let order">
+      {{ order.address }}
+      <span *ngIf="order.address && order.city">, </span>
+      {{ order.city }}
+    </td>
+  </ng-container>
+
+  <!-- Subtotal Column -->
+  <ng-container matColumnDef="subtotal">
+    <th mat-header-cell *matHeaderCellDef> Subtotal </th>
+    <td mat-cell *matCellDef="let order"> {{ order.subtotal | currency }} </td>
+  </ng-container>
+
+  <!-- Comment Column -->
+  <ng-container matColumnDef="comment">
+    <th mat-header-cell *matHeaderCellDef> Comment </th>
+    <td mat-cell *matCellDef="let order"> {{ order.comment }} </td>
+  </ng-container>
+
+  <!-- Status Column -->
+  <ng-container matColumnDef="status">
+    <th mat-header-cell *matHeaderCellDef> Status </th>
+    <td mat-cell *matCellDef="let order"> {{ order.status }} </td>
+  </ng-container>
+
+  <!-- Actions Column -->
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef> Actions </th>
+    <td mat-cell *matCellDef="let order">
+      <button mat-icon-button (click)="expandedElement = expandedElement === order ? null : order">
+        <mat-icon>{{ expandedElement === order ? 'expand_less' : 'expand_more' }}</mat-icon>
+      </button>
+      <button *ngIf="order.status !== 'cancelled'" mat-icon-button color="warn" (click)="cancelOrder(order.id)" matTooltip="Cancel">
+        <mat-icon>cancel</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <!-- Expanded Row Column -->
+  <ng-container matColumnDef="expandedDetail">
+    <td mat-cell *matCellDef="let order" [attr.colspan]="7" class="no-padding-cell">
+      <div class="expand-container" [@detailExpand]="order === expandedElement ? 'expanded' : 'collapsed'">
+        <ng-container *ngIf="order.items?.length > 0; else noItems">
+          <table mat-table [dataSource]="order.items" class="inner-table w-100">
+
+            <!-- Track Column -->
+            <ng-container matColumnDef="track">
+              <th mat-header-cell *matHeaderCellDef>Track</th>
+              <td mat-cell *matCellDef="let item">{{ item.track?.name }}</td>
+            </ng-container>
+
+            <!-- Medium Column -->
+            <ng-container matColumnDef="mediumId">
+              <th mat-header-cell *matHeaderCellDef>Medium</th>
+              <td mat-cell *matCellDef="let item">{{ item.track.records[0].medium.name}}</td>
+            </ng-container>
+
+            <!-- Quantity Column -->
+            <ng-container matColumnDef="itemQuantity">
+              <th mat-header-cell *matHeaderCellDef>Quantity</th>
+              <td mat-cell *matCellDef="let item">{{ item.itemQuantity }}</td>
+            </ng-container>
+
+            <!-- Price Column -->
+            <ng-container matColumnDef="price">
+              <th mat-header-cell *matHeaderCellDef>Price</th>
+              <td mat-cell *matCellDef="let item">{{ item.price | currency }}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="itemColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: itemColumns;"></tr>
+          </table>
+        </ng-container>
+
+        <ng-template #noItems>
+          <div class="p-3 text-muted">No items in this order.</div>
+        </ng-template>
+      </div>
+    </td>
+  </ng-container>
+
+  <!-- Main Row -->
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let order; columns: displayedColumns" class="main-row"></tr>
+
+  <!-- Expanded Row -->
+  <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" [@detailExpand]="row === expandedElement ? 'expanded' : 'collapsed'"></tr>
+</table>
+
+<mat-paginator
+  [length]="totalCount"
+  [pageSize]="searchParams.size"
+  [pageIndex]="searchParams.page - 1"
+  (page)="onPageChanged($event.pageIndex + 1)">
+</mat-paginator>

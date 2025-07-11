@@ -80,6 +80,10 @@ export class UsersComponent implements OnInit {
   }
 
   deleteUser(id: number) {
+    if (!confirm('Are you sure you want to delete this user?')) {
+      return;
+    }
+
     this.adminService.deleteUser(id).subscribe({
       next: () => this.users = this.users.filter(u => u.id !== id),
       error: err => console.error('Failed to delete user', err)

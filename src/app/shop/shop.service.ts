@@ -69,7 +69,7 @@ export class ShopService {
     return this.http.get<IMedium[]>(this.baseUrl+'/medium')
   }
 
-  addToCart(trackId: number, mediumId: number){
+  addToCart(trackId: number, mediumId: number) {
     return this.cartService.addToCart(trackId, mediumId).subscribe({
       next: () => {
         console.log("Item added to cart");

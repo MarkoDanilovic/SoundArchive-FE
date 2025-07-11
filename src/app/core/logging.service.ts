@@ -101,7 +101,16 @@ export class LoggingService {
   }
 
   changePassword(passwordChange: IPasswordChange): Observable<void> {
-    return this.httpClient.put<void>(`${this.authBaseUrl}/changePassword`, passwordChange);
+    return this.httpClient.put<void>(`${this.authBaseUrl}/changePassword`, passwordChange).pipe(
+      tap(response => {
+        console.log(response);
+        return response;
+      }),
+      catchError(error => {
+        console.log(error);
+        throw error;
+      })
+    );
   }
 
   updateUser(updatedUser: IUpdateUser) {

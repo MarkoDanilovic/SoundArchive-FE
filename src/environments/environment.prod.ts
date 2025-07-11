@@ -1,7 +1,8 @@
 export const environment = {
   production: true,
 
-  hostUrl: 'http://api-gateway:8080',
+  //hostUrl: 'http://api-gateway:8080',
+  hostUrl: 'http://localhost:8080',
 
   get baseUrl() {
     return `${this.hostUrl}/api/soundArchive`;

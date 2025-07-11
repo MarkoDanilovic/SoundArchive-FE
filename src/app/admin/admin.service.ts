@@ -4,6 +4,10 @@ import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {IMedium} from "../shared/models/medium";
 import {IPaginationUser, IUpdateUser, IUser, IUserSearch} from "../shared/models/user";
+import {Cart, ICartSearch, IPaginationCart} from "../shared/models/cart";
+import {IPaginationTrack, ITrackSearch} from "../shared/models/track";
+import {IPagination} from "../shared/models/pagination";
+import {map} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +17,8 @@ export class AdminService {
   genreBaseUrl = environment.genreBaseUrl;
   mediumBaseUrl = environment.mediumBaseUrl;
   userBaseUrl = environment.userBaseUrl;
+  cartBaseUrl = environment.cartBaseUrl;
+  trackBaseUrl = environment.trackBaseUrl;
 
   constructor(private httpClient: HttpClient) { }
 
@@ -117,5 +123,70 @@ export class AdminService {
     });
 
     return this.httpClient.delete(`${this.userBaseUrl}/${id}`, { headers });
+  }
+
+
+  getOrders(searchParams: ICartSearch) {
+    const token = localStorage.getItem('jwt');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    let params = new HttpParams()
+      .set('page', searchParams.page.toString())
+      .set('size', searchParams.size.toString())
+      .set('order', searchParams.order)
+      .set('sortBy', searchParams.sortBy);
+
+    if(searchParams.status) {
+      params = params.append('status', searchParams.status);
+    }
+
+    return this.httpClient.get<IPaginationCart>(`${this.cartBaseUrl}`, { params, headers });
+  }
+
+  cancelOrder(orderId: string) {
+    return this.httpClient.put(`${this.cartBaseUrl}/${orderId}/changeStatus/cancelled`, {});
+  }
+
+  getTracks(trackSearchParams: ITrackSearch) {
+
+    let params = new HttpParams()
+      .set('page', trackSearchParams.page.toString())
+      .set('size', trackSearchParams.size.toString())
+      .set('order', trackSearchParams.order)
+      .set('sortBy', trackSearchParams.sortBy);
+
+    if(trackSearchParams.name){
+      params = params.append('name', trackSearchParams.name)
+    }
+
+    if(trackSearchParams.genreId !== 0){
+      params = params.append('genreId', trackSearchParams.genreId)
+    }
+
+    if(trackSearchParams.mediumId !== 0){
+      params = params.append('mediumId', trackSearchParams.mediumId)
+    }
+
+    if(trackSearchParams.artistName) {
+      params = params.append('artistName', trackSearchParams.artistName);
+    }
+
+    if(trackSearchParams.artistId !== 0){
+      params = params.append('artistId', trackSearchParams.artistId)
+    }
+
+    return this.httpClient.get<IPaginationTrack>(`${this.trackBaseUrl}`, { params });
+  }
+
+  deleteTrack(id: number) {
+
+    const token = localStorage.getItem('jwt');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.httpClient.delete(`${this.trackBaseUrl}/${id}`, { headers });
   }
 }

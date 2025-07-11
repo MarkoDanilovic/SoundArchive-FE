@@ -2,20 +2,18 @@
 
 <form [formGroup]="form" (ngSubmit)="submit()">
   <mat-dialog-content>
-    <!-- Removed container class for simplicity -->
+
     <div>
-      <!-- Image upload section -->
+
       <div class="mb-3">
         <mat-label>Artist Image  </mat-label>
         <input type="file" (change)="onFileChange($event)" accept="image/*" />
       </div>
 
-      <!-- Image preview -->
       <div *ngIf="imagePreview" class="image-preview mb-3">
         <img [src]="imagePreview" alt="Image preview" class="img-thumbnail" />
       </div>
 
-      <!-- Artist Name -->
       <div class="mb-3">
         <mat-form-field appearance="fill" class="w-100">
           <mat-label>Artist Name</mat-label>
@@ -23,7 +21,6 @@
         </mat-form-field>
       </div>
 
-      <!-- First Name -->
       <div class="mb-3">
         <mat-form-field appearance="fill" class="w-100">
           <mat-label>First Name</mat-label>
@@ -31,7 +28,6 @@
         </mat-form-field>
       </div>
 
-      <!-- Last Name -->
       <div class="mb-3">
         <mat-form-field appearance="fill" class="w-100">
           <mat-label>Last Name</mat-label>
@@ -39,7 +35,6 @@
         </mat-form-field>
       </div>
 
-      <!-- Birthday -->
       <div class="mb-3">
         <mat-form-field appearance="fill" class="w-100">
           <mat-label>Birthday</mat-label>
@@ -47,7 +42,6 @@
         </mat-form-field>
       </div>
 
-      <!-- Country -->
       <div class="mb-3">
         <mat-form-field appearance="fill" class="w-100">
           <mat-label>Country</mat-label>

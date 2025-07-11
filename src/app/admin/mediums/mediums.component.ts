@@ -39,6 +39,10 @@ export class MediumsComponent implements OnInit {
   }
 
   deleteMedium(id: number) {
+    if (!confirm('Are you sure you want to delete this medium?')) {
+      return;
+    }
+
     this.adminService.deleteMedium(id).subscribe({
       next: () => this.mediums = this.mediums.filter(g => g.id !== id),
       error: err => console.error('Failed to delete medium', err)

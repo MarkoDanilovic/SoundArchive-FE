@@ -1,5 +1,5 @@
 <div class="card h-100 shadow-sm">
-  <img src="{{ artist.picture ? imageBaseUrl + artist.picture : '/assets/discogs.png' }}" alt="{{artist.artistName}}" class="img-fluid">
+  <img src="{{ getArtistImageUrl(imageBaseUrl, artist.picture, artist.id) }}" alt="{{artist.artistName}}" class="img-fluid">
   <div class="card-body d-flex flex-column">
     <a >
       <h6 class="text-uppercase" routerLink="/artist/{{artist.id}}">{{artist.artistName}}</h6>

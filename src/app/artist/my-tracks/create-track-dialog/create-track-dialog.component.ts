@@ -5,8 +5,9 @@ import {ITrack} from "../../../shared/models/track";
 import {IGenre} from "../../../shared/models/genre";
 import {IMedium} from "../../../shared/models/medium";
 import {ArtistService} from "../../artist.service";
-import {ImageUploadService} from "../../../core/image-upload.service";
+import {ImageService} from "../../../core/image.service";
 import {IArtist} from "../../../shared/models/artist";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-create-track-dialog',
@@ -30,7 +31,8 @@ export class CreateTrackDialogComponent implements OnInit {
       artist: IArtist
     },
     private artistService: ArtistService,
-    private imageUploadService: ImageUploadService
+    private imageUploadService: ImageService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -122,11 +124,23 @@ export class CreateTrackDialogComponent implements OnInit {
             this.isSubmitting = false;
             this.dialogRef.close(createdTrack);
           }
+          this.snackBar.open(`Track successfully created`, '✖', {
+            duration: 3000,
+            panelClass: ['snackbar-success'],
+            horizontalPosition: 'end',
+            verticalPosition: 'bottom'
+          });
         },
         error: (err) => {
           this.isSubmitting = false;
-          this.errorMessage = 'Failed to create track. Please try again.';
+          this.errorMessage = 'Failed to create track';
           console.error(err);
+          this.snackBar.open('Failed to create track', '✖', {
+            duration: 3000,
+            panelClass: ['snackbar-error'],
+            horizontalPosition: 'end',
+            verticalPosition: 'bottom'
+          });
         }
       });
     }

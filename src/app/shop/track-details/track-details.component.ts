@@ -5,6 +5,8 @@ import {ActivatedRoute} from "@angular/router";
 import {WishlistService} from "../../wishlist/wishlist.service";
 import {IRecord} from "../../shared/models/record";
 import {environment} from "../../../environments/environment";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {ImageService} from "../../core/image.service";
 
 @Component({
   selector: 'app-track-details',
@@ -21,7 +23,12 @@ export class TrackDetailsComponent implements OnInit {
 
   imageBaseUrl = environment.imageBaseUrl
 
-  constructor(private shopService: ShopService, private activateRoute: ActivatedRoute, private wishlistService: WishlistService) { }
+  constructor(private shopService: ShopService,
+              private activateRoute: ActivatedRoute,
+              private wishlistService: WishlistService,
+              private snackBar: MatSnackBar,
+              private imageService: ImageService
+  ) { }
 
   ngOnInit(): void {
     this.loadTrack()
@@ -38,8 +45,14 @@ export class TrackDetailsComponent implements OnInit {
   }
 
   addToCart(trackId: number, mediumId: number) {
-    this.shopService.addToCart(trackId, mediumId);
+    this.shopService.addToCart(trackId, mediumId)
     console.log("Track details added to cart " + trackId + " " + mediumId);
+    this.snackBar.open(`Track successfully added to cart`, '✖', {
+      duration: 3000,
+      panelClass: ['snackbar-success'],
+      horizontalPosition: 'end',
+      verticalPosition: 'bottom'
+    });
     return null;
   }
 
@@ -79,5 +92,18 @@ export class TrackDetailsComponent implements OnInit {
         this.isInWishlist = false
       }
     );
+  }
+
+  formatTime(seconds: number): string {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    const paddedMins = mins < 10 ? '0' + mins : mins;
+    const paddedSecs = secs < 10 ? '0' + secs : secs;
+    return `${paddedMins}:${paddedSecs}`;
+  }
+
+  getTrackImageUrl(baseUrl: string, picture: string | null | undefined, trackId: number): string {
+
+    return this.imageService.getTrackImageUrl(baseUrl, picture, this.track.id);
   }
 }

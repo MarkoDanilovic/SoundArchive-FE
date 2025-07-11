@@ -3,7 +3,8 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {MatDialogRef} from "@angular/material/dialog";
 import {LoggingService} from "../../logging.service";
 import {IArtist} from "../../../shared/models/artist";
-import {ImageUploadService} from "../../image-upload.service";
+import {ImageService} from "../../image.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-create-artist-dialog',
@@ -20,15 +21,16 @@ export class CreateArtistDialogComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<CreateArtistDialogComponent>,
-    private imageUploadService: ImageUploadService,
-    private logService: LoggingService
+    private imageUploadService: ImageService,
+    private logService: LoggingService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({
       artistName: ['', Validators.required],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
+      firstName: [''],//, Validators.required],
+      lastName: [''],//, Validators.required],
       birthday: ['', Validators.required],
       country: ['', Validators.required],
       picture: [''],
@@ -71,10 +73,23 @@ export class CreateArtistDialogComponent implements OnInit {
           this.isSubmitting = false;
           this.dialogRef.close(artist);
         }
+        // this.snackBar.open(`Artist created successfully`, '✖', {
+        //   duration: 3000,
+        //   panelClass: ['snackbar-success'],
+        //   horizontalPosition: 'end',
+        //   verticalPosition: 'bottom'
+        // });
       },
       error: (err) => {
         this.isSubmitting = false;
-        this.errorMessage = err?.error?.message || 'Failed to create artist.';
+        this.errorMessage = err?.error?.message || 'Failed to create artist';
+
+        this.snackBar.open('Failed to create artist', '✖', {
+          duration: 3000,
+          panelClass: ['snackbar-error'],
+          horizontalPosition: 'end',
+          verticalPosition: 'bottom'
+        });
       },
     });
   }

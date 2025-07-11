@@ -7,6 +7,7 @@ import {UpdateUserDialogComponent} from "./update-user-dialog/update-user-dialog
 import {CreateArtistDialogComponent} from "./create-artist-dialog/create-artist-dialog.component";
 import {IArtist} from "../../shared/models/artist";
 import {Router} from "@angular/router";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-my-user',
@@ -17,7 +18,7 @@ export class MyUserComponent implements OnInit {
 
   userData?: IUser;
 
-  constructor(private matDialog:MatDialog, private logService: LoggingService, private router: Router) { }
+  constructor(private matDialog:MatDialog, private logService: LoggingService, private router: Router, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.logService.getCurrentUser().subscribe({
@@ -25,7 +26,13 @@ export class MyUserComponent implements OnInit {
         this.userData = user;
       },
       error: err => {
-        console.error('Failed to fetch user data', err);
+        console.error('Failed to load user information', err);
+        this.snackBar.open('Failed to load user information', '✖', {
+          duration: 3000,
+          panelClass: ['snackbar-error'],
+          horizontalPosition: 'end',
+          verticalPosition: 'bottom'
+        });
       }
     });
   }
@@ -103,7 +110,7 @@ export class MyUserComponent implements OnInit {
       if (newArtist) {
         console.log('Artist created successfully:', newArtist);
 
-        this.router.navigateByUrl('/shop');
+        this.router.navigateByUrl('/artist/my-artist');
         location.reload();
       }
     });

@@ -1,36 +1,26 @@
-.card{
-  height: 60vh;
-  margin: 25px;
-  padding: 25px;
+
+.full-width-table {
+  width: 100%;
 }
-.center{
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+
+.d-flex {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.text-center {
   text-align: center;
 }
 
-.h4,h6{
-  font-weight: 400;
+.mt-2 {
+  margin-top: 1rem;
 }
 
-.card-table{
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  min-width: auto;
-  word-wrap: break-word;
-  background-color: #fff;
-  background-clip: border-box;
-  border: 1px solid rgb(0,0,0,0.2);
-  border-radius: .25rem;
+.mt-3 {
+  margin-top: 1.5rem;
 }
 
-.center .btn{
-  font-size: 14px !important;
-  margin-top: 20px !important;
-  font-weight: 400;
-  padding: 12px 72px;
-  border-radius: 3px !important;
+.p-3 {
+  padding: 1rem;
 }

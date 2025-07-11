@@ -1,8 +1,10 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {IPagination} from "../../shared/models/pagination";
-import {ITrack} from "../../shared/models/track";
-import {ShopService} from "../../shop/shop.service";
-import {ShopParams} from "../../shared/models/shopParams";
+import {IPaginationTrack, ITrack, ITrackSearch} from "../../shared/models/track";
+import {AdminService} from "../admin.service";
+import {UpdateTrackDialogComponent} from "../../artist/my-tracks/update-track-dialog/update-track-dialog.component";
+import {MatDialog} from "@angular/material/dialog";
+import {IGenre} from "../../shared/models/genre";
+import {IMedium} from "../../shared/models/medium";
 
 @Component({
   selector: 'app-tracks',
@@ -10,40 +12,126 @@ import {ShopParams} from "../../shared/models/shopParams";
   styleUrls: ['./tracks.component.scss']
 })
 export class TracksComponent implements OnInit {
+  @ViewChild('search', { static: true }) searchTerm!: ElementRef;
 
-  @ViewChild('search', {static:true}) searchTerm: ElementRef
-  tracks?: IPagination;
-  shopParams = new ShopParams();
+  tracks?: IPaginationTrack;
+  trackSearchParams: ITrackSearch = {
+    page: 1,
+    size: 10,
+    order: 'asc',
+    sortBy: 'name',
+    name: '',
+    genreId: 0,
+    mediumId: 0,
+    artistName: '',
+    artistId: 0
+  };
 
-  constructor(private shopService: ShopService) {}
+  displayedColumns: string[] = ['name', 'duration', 'publishDate', 'genre', 'artist', 'actions'];
+
+  genres: IGenre[]
+  mediums: IMedium[]
+
+  constructor(private adminService: AdminService, public dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.loadTracks();
+    this.loadGenre();
+    this.loadMediums();
   }
 
-  loadTracks(page: number = this.shopParams.pageNumber): void {
-    this.shopParams.pageNumber = page;
+  loadTracks(page: number = this.trackSearchParams.page): void {
+    this.trackSearchParams.page = page;
 
-    this.shopService.getProducts(this.shopParams).subscribe({
+    this.adminService.getTracks(this.trackSearchParams).subscribe({
       next: response => this.tracks = response,
       error: err => console.error('Failed to load tracks', err)
     });
   }
 
-  handleAction(event: { type: string, item: ITrack }) {
+  loadGenre() {
+    this.adminService.getGenres().subscribe({
+      next: res => this.genres = res,
+      error: err => console.error('Failed to load genres', err)
+    });
+  }
+
+  loadMediums() {
+    this.adminService.getMediums().subscribe({
+      next: res => this.mediums = res,
+      error: err => console.error('Failed to load mediums', err)
+    });
+  }
+
+  handleAction(event: { type: string; item: ITrack }) {
     console.log(`${event.type} action on track`, event.item);
-    // Implement edit/delete logic here
+    // Place edit/delete logic here
   }
 
-  onSearch(){
-    this.shopParams.search = this.searchTerm.nativeElement.value
-    this.shopParams.pageNumber=1
-    this.loadTracks()
+  onSearch() {
+    this.trackSearchParams.name = this.searchTerm.nativeElement.value;
+    this.trackSearchParams.page = 1;
+    this.loadTracks();
   }
 
-  onReset(){
-    this.searchTerm.nativeElement.value='';
-    this.shopParams = new ShopParams();
-    this.loadTracks()
+  onReset() {
+    this.searchTerm.nativeElement.value = '';
+    this.trackSearchParams = {
+      page: 1,
+      size: 10,
+      order: 'asc',
+      sortBy: 'name',
+      name: '',
+      genreId: 0,
+      mediumId: 0,
+      artistName: '',
+      artistId: 0
+    };
+    this.loadTracks();
+  }
+
+  onPageChanged(event: any) {
+    this.loadTracks(event.pageIndex + 1);
+  }
+
+
+  editTrack(track: ITrack) {
+    this.openUpdateTrackDialog(track);
+  }
+
+
+  openUpdateTrackDialog(track: ITrack): void {
+    const dialogRef = this.dialog.open(UpdateTrackDialogComponent, {
+      width: '600px',
+      data: {track: track, genres: this.genres, mediums: this.mediums}
+    });
+
+    dialogRef.afterClosed().subscribe((updatedTrack: ITrack | null) => {
+      if (updatedTrack) {
+        this.loadTracks();
+        console.log('Updated Track: ', updatedTrack);
+      }
+    });
+  }
+
+  deleteTrack(id: number) {
+    if (!confirm('Are you sure you want to delete this track?')) {
+      return;
+    }
+
+    this.adminService.deleteTrack(id).subscribe({
+      next: () => {
+        this.loadTracks();
+      },
+      error: err => console.error('Failed to delete track', err)
+    });
+  }
+
+  formatTime(seconds: number): string {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    const paddedMins = mins < 10 ? '0' + mins : mins;
+    const paddedSecs = secs < 10 ? '0' + secs : secs;
+    return `${paddedMins}:${paddedSecs}`;
   }
 }

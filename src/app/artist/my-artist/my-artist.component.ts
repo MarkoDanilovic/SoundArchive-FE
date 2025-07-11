@@ -4,6 +4,8 @@ import {ArtistService} from "../artist.service";
 import {environment} from "../../../environments/environment";
 import { MatDialog } from '@angular/material/dialog';
 import {UpdateArtistDialogComponent} from "./update-artist-dialog/update-artist-dialog.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {ImageService} from "../../core/image.service";
 
 @Component({
   selector: 'app-my-artist',
@@ -15,7 +17,11 @@ export class MyArtistComponent implements OnInit {
   artistData?: IArtist;
   imageBaseUrl = environment.imageBaseUrl
 
-  constructor(private artistService: ArtistService, private matDialog: MatDialog) {}
+  constructor(private artistService: ArtistService,
+              private matDialog: MatDialog,
+              private snackBar: MatSnackBar,
+              private imageService: ImageService
+  ) {}
 
   ngOnInit(): void {
     const artistIdString = localStorage.getItem('currentUserArtistId');
@@ -28,7 +34,13 @@ export class MyArtistComponent implements OnInit {
           this.artistData = artist;
         },
         error: err => {
-          console.error('Failed to fetch artist data:', err);
+          console.error('Failed to load artist information ', err);
+          this.snackBar.open('Failed to load artist information', '✖', {
+            duration: 3000,
+            panelClass: ['snackbar-error'],
+            horizontalPosition: 'end',
+            verticalPosition: 'bottom'
+          });
         }
       });
     } else {
@@ -49,5 +61,10 @@ export class MyArtistComponent implements OnInit {
         console.log('Artist updated successfully: ', updatedArtist);
       }
     });
+  }
+
+  getArtistImageUrl(baseUrl: string, picture: string | null | undefined, artistId: number): string {
+
+    return this.imageService.getArtistImageUrl(baseUrl, picture, this.artistData.id);
   }
 }

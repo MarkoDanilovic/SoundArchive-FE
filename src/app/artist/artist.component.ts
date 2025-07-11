@@ -2,6 +2,7 @@ import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {IArtist} from "../shared/models/artist";
 import {ArtistParams} from "../shared/models/artistParams";
 import {ArtistService} from "./artist.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-artist',
@@ -20,7 +21,7 @@ export class ArtistComponent implements OnInit {
     {name: 'Descending', value:'desc'}
   ]
 
-  constructor(private artistService: ArtistService) { }
+  constructor(private artistService: ArtistService, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.getArtists();
@@ -35,6 +36,22 @@ export class ArtistComponent implements OnInit {
     }, error => {
       console.log(error)
       this.artists = null
+      if(error.status === 404){
+        this.snackBar.open('No artist found', '✖', {//No artist found
+          duration: 3000,
+          panelClass: ['snackbar-error'],
+          horizontalPosition: 'end',
+          verticalPosition: 'bottom'
+        });
+      }
+      else {
+        this.snackBar.open('Failed to load list of artists', '✖', {
+          duration: 3000,
+          panelClass: ['snackbar-error'],
+          horizontalPosition: 'end',
+          verticalPosition: 'bottom'
+        });
+      }
     })
   }
 

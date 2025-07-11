@@ -7,7 +7,7 @@
     <a class="p-2 " routerLink="/admin" *ngIf="logRole === 3">Admin</a>
   </nav>
   <div class="d-flex align-items-center">
-    <a routerLink="/wishlist" class="position-relative mr-4" *ngIf="this.logRole !== null">
+    <a routerLink="/wishlist" class="position-relative mr-4" *ngIf="this.logRole !== 0">
       <i class="fa fa-star-o fa-2x text-dark"></i>
     </a>
     <a routerLink="/basket" class="position-relative">

@@ -1,6 +1,6 @@
 <div *ngIf="track">
   <div class="col-6">
-    <img src="{{ track.picture ? imageBaseUrl + track.picture : '/assets/discogs.png' }}" alt="{{track.name}}" class="img-fluid w-100">
+    <img src="{{ getTrackImageUrl(imageBaseUrl, track.picture, track.id) }}" alt="{{track.name}}" class="img-fluid w-100">
   </div>
   <div class="col-6">
     <h3>Track name : {{track.name}}</h3>
@@ -16,10 +16,10 @@
   <div class="row mt-5">
     <div class="col-12 ml-3">
       <h4>Description</h4>
-      <p>Genre: {{track.genre.name}}</p>
-      <p>Artist: {{track.artist.artistName}}</p>
-      <p>Publish date: {{ track.publishDate | date:'dd.MM.yyyy' }}</p>
-      <p>Duration: {{track.duration}}</p>
+      <p>Genre: {{ track.genre.name }}</p>
+      <p>Artist: {{ track.artist.artistName }}</p>
+      <p>Publish date: {{ track.publishDate | date:'dd.MM.yyyy.' }}</p>
+      <p>Duration: {{ formatTime(track.duration) }}</p>
 
       <div class="row">
         <div class="col-3 mb-3" *ngFor="let record of track.records">

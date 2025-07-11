@@ -3,7 +3,8 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {IArtist} from "../../../shared/models/artist";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ArtistService} from "../../artist.service";
-import {ImageUploadService} from "../../../core/image-upload.service";
+import {ImageService} from "../../../core/image.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-update-artist-dialog',
@@ -22,7 +23,8 @@ export class UpdateArtistDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<UpdateArtistDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IArtist,
     private artistService: ArtistService,
-    private imageUploadService: ImageUploadService
+    private imageUploadService: ImageService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -82,10 +84,22 @@ export class UpdateArtistDialogComponent implements OnInit {
           this.isSubmitting = false;
           this.dialogRef.close(savedArtist);
         }
+        this.snackBar.open(`Artist information successfully updated`, '✖', {
+          duration: 3000,
+          panelClass: ['snackbar-success'],
+          horizontalPosition: 'end',
+          verticalPosition: 'bottom'
+        });
       },
       error: err => {
         this.isSubmitting = false;
-        this.errorMessage = err?.error?.message || 'Failed to update artist.';
+        this.errorMessage = 'Failed to update artist information';//err?.error?.message || 'Failed to update artist information';
+        this.snackBar.open('Failed to update artist information', '✖', {
+          duration: 3000,
+          panelClass: ['snackbar-error'],
+          horizontalPosition: 'end',
+          verticalPosition: 'bottom'
+        });
       }
     });
   }

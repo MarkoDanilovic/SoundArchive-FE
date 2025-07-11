@@ -9,6 +9,7 @@ import {CreateTrackDialogComponent} from "./create-track-dialog/create-track-dia
 import {MatDialog} from "@angular/material/dialog";
 import {IArtist} from "../../shared/models/artist";
 import {ArtistService} from "../artist.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-my-tracks',
@@ -29,7 +30,7 @@ export class MyTracksComponent implements OnInit {
 
   imageBaseUrl = environment.imageBaseUrl
 
-  constructor(private shopService: ShopService, private artistService: ArtistService, public dialog: MatDialog) { }
+  constructor(private shopService: ShopService, private artistService: ArtistService, public dialog: MatDialog, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.loadArtist();
@@ -49,6 +50,12 @@ export class MyTracksComponent implements OnInit {
     }, error => {
       console.log(error)
       this.tracks = null;
+      this.snackBar.open('Tracks not found', '✖', {
+        duration: 3000,
+        panelClass: ['snackbar-error'],
+        horizontalPosition: 'end',
+        verticalPosition: 'bottom'
+      });
     })
   }
 

@@ -6,7 +6,8 @@ import {IGenre} from "../../../shared/models/genre";
 import {IMedium} from "../../../shared/models/medium";
 import {ArtistService} from "../../artist.service";
 import {IArtist} from "../../../shared/models/artist";
-import {ImageUploadService} from "../../../core/image-upload.service";
+import {ImageService} from "../../../core/image.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-update-track-dialog',
@@ -26,7 +27,8 @@ export class UpdateTrackDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<UpdateTrackDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { track: ITrack; genres: IGenre[]; mediums: IMedium[] },
     private artistService: ArtistService,
-    private imageUploadService: ImageUploadService,
+    private imageUploadService: ImageService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -132,11 +134,23 @@ export class UpdateTrackDialogComponent implements OnInit {
             this.isSubmitting = false;
             this.dialogRef.close(savedTrack);
           }
+          this.snackBar.open(`Track successfully updated`, '✖', {
+            duration: 3000,
+            panelClass: ['snackbar-success'],
+            horizontalPosition: 'end',
+            verticalPosition: 'bottom'
+          });
         },
         error: (error) => {
           this.isSubmitting = false;
-          this.errorMessage = 'Failed to update track. Please try again.';
-          console.error('Track update failed', error);
+          this.errorMessage = 'Failed to update track';
+          console.error('Failed to update track', error);
+          this.snackBar.open('Failed to update track', '✖', {
+            duration: 3000,
+            panelClass: ['snackbar-error'],
+            horizontalPosition: 'end',
+            verticalPosition: 'bottom'
+          });
         }
       });
     }

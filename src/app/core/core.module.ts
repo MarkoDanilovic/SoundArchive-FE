@@ -13,6 +13,7 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatButtonModule} from "@angular/material/button";
 import { UpdateUserDialogComponent } from './my-user/update-user-dialog/update-user-dialog.component';
 import { CreateArtistDialogComponent } from './my-user/create-artist-dialog/create-artist-dialog.component';
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 
 
@@ -28,6 +29,7 @@ import { CreateArtistDialogComponent } from './my-user/create-artist-dialog/crea
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatSnackBarModule,
 
     RouterModule.forChild([
       { path: '', component: MyUserComponent }

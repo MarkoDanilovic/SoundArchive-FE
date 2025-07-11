@@ -37,10 +37,10 @@
         </button>
       </ng-container>
       <ng-template #editButtons>
-        <button mat-icon-button color="accent" (click)="startEdit(medium)">
+        <button mat-icon-button color="accent" (click)="startEdit(medium)" matTooltip="Edit">
           <mat-icon>edit</mat-icon>
         </button>
-        <button mat-icon-button color="warn" (click)="deleteMedium(medium.id)">
+        <button mat-icon-button color="warn" (click)="deleteMedium(medium.id)" matTooltip="Delete">
           <mat-icon>delete</mat-icon>
         </button>
       </ng-template>

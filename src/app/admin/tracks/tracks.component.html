@@ -1,15 +1,71 @@
 <div class="form-inline mt-2">
-  <input class="form-control mr-2" (keyup.enter)="onSearch()" #search style="width: 300px" placeholder="Search by track name" type="text">
-  <button class="btn btn-outline-primary my-2"  (click)="onSearch()">Search</button>
+  <input
+    class="form-control mr-2"
+    (keyup.enter)="onSearch()"
+    #search
+    style="width: 300px"
+    placeholder="Search by track name"
+    type="text"
+  />
+  <button class="btn btn-outline-primary my-2" (click)="onSearch()">Search</button>
   <button class="btn btn-outline-success ml-2 my-2" (click)="onReset()">Reset</button>
 </div>
 
-<app-table
-  [displayedColumns]="['name', 'duration', 'publishDate', 'genre.name', 'artist.artistName']"
-  [displayedLabels]="['Title', 'Duration (sec)', 'Published', 'Genre', 'Artist']"
-  [dataSource]="tracks?.items || []"
-  [actions]="['edit', 'delete']"
-  [pagination]="tracks"
-  (action)="handleAction($event)"
-  (pageChange)="loadTracks($event)">
-</app-table>
+<table mat-table [dataSource]="tracks?.items || []" class="mat-elevation-z2 w-100 mt-3">
+
+  <!-- Name -->
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Title</th>
+    <td mat-cell *matCellDef="let track">{{ track.name }}</td>
+  </ng-container>
+
+  <!-- Duration -->
+  <ng-container matColumnDef="duration">
+    <th mat-header-cell *matHeaderCellDef>Duration (sec)</th>
+    <td mat-cell *matCellDef="let track">{{ formatTime(track.duration) }}</td>
+  </ng-container>
+
+  <!-- Publish Date -->
+  <ng-container matColumnDef="publishDate">
+    <th mat-header-cell *matHeaderCellDef>Published</th>
+    <td mat-cell *matCellDef="let track">{{ track.publishDate | date: 'shortDate' }}</td>
+  </ng-container>
+
+  <!-- Genre -->
+  <ng-container matColumnDef="genre">
+    <th mat-header-cell *matHeaderCellDef>Genre</th>
+    <td mat-cell *matCellDef="let track">{{ track.genre?.name }}</td>
+  </ng-container>
+
+  <!-- Artist -->
+  <ng-container matColumnDef="artist">
+    <th mat-header-cell *matHeaderCellDef>Artist</th>
+    <td mat-cell *matCellDef="let track">{{ track.artist?.artistName }}</td>
+  </ng-container>
+
+  <!-- Actions -->
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef>Actions</th>
+    <td mat-cell *matCellDef="let track">
+      <button mat-icon-button color="primary" [routerLink]="'/shop/' + track.id" matTooltip="View in shop">
+        <mat-icon>visibility</mat-icon>
+      </button>
+      <button mat-icon-button color="accent" (click)="editTrack(track)" matTooltip="Edit">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button color="warn" (click)="deleteTrack(track.id)" matTooltip="Delete">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<mat-paginator
+  [length]="tracks?.totalCount || 0"
+  [pageSize]="trackSearchParams.size"
+  [pageIndex]="trackSearchParams.page - 1"
+  (page)="onPageChanged($event)">
+</mat-paginator>

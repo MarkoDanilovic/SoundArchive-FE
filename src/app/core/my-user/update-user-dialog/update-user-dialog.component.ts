@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {LoggingService} from "../../logging.service";
 import {IUpdateUser} from "../../../shared/models/user";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-update-user-dialog',
@@ -18,6 +19,7 @@ export class UpdateUserDialogComponent implements OnInit {
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<UpdateUserDialogComponent>,
     private logService: LoggingService,
+    private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public userData: IUpdateUser
   ) {}
 
@@ -49,10 +51,22 @@ export class UpdateUserDialogComponent implements OnInit {
 
     this.logService.updateUser(updatedUser).subscribe({
       next: () => {
+        this.snackBar.open(`User information successfully updated`, '✖', {
+          duration: 3000,
+          panelClass: ['snackbar-success'],
+          horizontalPosition: 'end',
+          verticalPosition: 'bottom'
+        });
         this.isSubmitting = false;
         this.dialogRef.close(updatedUser);
       },
       error: err => {
+        this.snackBar.open('Failed to update user information', '✖', {
+          duration: 3000,
+          panelClass: ['snackbar-error'],
+          horizontalPosition: 'end',
+          verticalPosition: 'bottom'
+        });
         this.isSubmitting = false;
         this.errorMessage = err?.error?.message || 'Failed to update user.';
       }

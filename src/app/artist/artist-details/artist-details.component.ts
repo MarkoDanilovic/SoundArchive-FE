@@ -6,6 +6,7 @@ import {ITrack} from "../../shared/models/track";
 import {ShopParams} from "../../shared/models/shopParams";
 import {ShopService} from "../../shop/shop.service";
 import {environment} from "../../../environments/environment";
+import {ImageService} from "../../core/image.service";
 
 @Component({
   selector: 'app-artist-details',
@@ -23,7 +24,11 @@ export class ArtistDetailsComponent implements OnInit {
 
   imageBaseUrl = environment.imageBaseUrl
 
-  constructor(private artistService: ArtistService, private activatedRoute: ActivatedRoute, private shopService: ShopService) { }
+  constructor(private artistService: ArtistService,
+              private activatedRoute: ActivatedRoute,
+              private shopService: ShopService,
+              private imageService: ImageService
+  ) { }
 
   ngOnInit(): void {
     this.loadArtist()
@@ -33,8 +38,8 @@ export class ArtistDetailsComponent implements OnInit {
     this.artistService.getArtist(+this.activatedRoute.snapshot.paramMap.get('id')).subscribe(artist => {
       this.artist = artist
 
-      this.shopParams.artistName = artist.artistName
-      console.log("On loadArtist:" + this.shopParams.artistName)
+      this.shopParams.artistId = artist.id
+      console.log("On loadArtist:" + this.artist.artistName)
 
       this.getTracks()
 
@@ -61,5 +66,10 @@ export class ArtistDetailsComponent implements OnInit {
       this.getTracks()
     }
 
+  }
+
+  getArtistImageUrl(baseUrl: string, picture: string | null | undefined, artistId: number): string {
+
+    return this.imageService.getArtistImageUrl(baseUrl, picture, this.artist.id);
   }
 }

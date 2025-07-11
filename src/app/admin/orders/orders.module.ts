@@ -3,6 +3,12 @@ import { CommonModule } from '@angular/common';
 
 import { OrdersRoutingModule } from './orders-routing.module';
 import { OrdersComponent } from './orders.component';
+import {MatTableModule} from "@angular/material/table";
+import {MatPaginatorModule} from "@angular/material/paginator";
+import {FormsModule} from "@angular/forms";
+import {MatIconModule} from "@angular/material/icon";
+import {MatButtonModule} from "@angular/material/button";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 
 @NgModule({
@@ -11,7 +17,13 @@ import { OrdersComponent } from './orders.component';
   ],
   imports: [
     CommonModule,
-    OrdersRoutingModule
+    OrdersRoutingModule,
+    MatTableModule,
+    MatPaginatorModule,
+    FormsModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTooltipModule
   ]
 })
 export class OrdersModule { }

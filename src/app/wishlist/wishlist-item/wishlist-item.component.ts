@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {WishlistService} from "../wishlist.service";
 import {ITrack} from "../../shared/models/track";
 import {environment} from "../../../environments/environment";
+import {ImageService} from "../../core/image.service";
 
 @Component({
   selector: 'app-wishlist-item',
@@ -17,7 +18,7 @@ export class WishlistItemComponent implements OnInit {
 
   imageBaseUrl = environment.imageBaseUrl
 
-  constructor(private wishlistService: WishlistService) {
+  constructor(private wishlistService: WishlistService, private imageService: ImageService) {
     this.userId = Number(localStorage.getItem('currentUserId'));
   }
 
@@ -42,5 +43,18 @@ export class WishlistItemComponent implements OnInit {
     } else {
       console.error('Invalid user or track ID');
     }
+  }
+
+  formatTime(seconds: number): string {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    const paddedMins = mins < 10 ? '0' + mins : mins;
+    const paddedSecs = secs < 10 ? '0' + secs : secs;
+    return `${paddedMins}:${paddedSecs}`;
+  }
+
+  getTrackImageUrl(baseUrl: string, picture: string | null | undefined, trackId: number): string {
+
+    return this.imageService.getTrackImageUrl(baseUrl, picture, this.track.id);
   }
 }

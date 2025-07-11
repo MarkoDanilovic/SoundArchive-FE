@@ -2,6 +2,7 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {NgForm} from "@angular/forms";
 import {RegisterUser} from "../../shared/models/registerUser";
 import {LoggingService} from "../logging.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-register-dialog',
@@ -14,7 +15,7 @@ export class RegisterDialogComponent implements OnInit {
 
   @Output() registrationSuccess: EventEmitter<string> = new EventEmitter<string>(); // Emit username on successful registration
 
-  constructor(private service: LoggingService) { }
+  constructor(private service: LoggingService, private snackBar: MatSnackBar) { }
 
   public user : RegisterUser = new RegisterUser()
 
@@ -44,10 +45,24 @@ export class RegisterDialogComponent implements OnInit {
         console.log('User registered:', response);
         this.invalidRegister = false;
         this.registrationSuccess.emit(response.username);
+
+        this.snackBar.open(`User created`, '✖', {
+          duration: 3000,
+          panelClass: ['snackbar-success'],
+          horizontalPosition: 'end',
+          verticalPosition: 'bottom'
+        });
       },
       error: (error) => {
         console.log('Error registering user:', error);
         this.invalidRegister = true;
+
+        this.snackBar.open('Registration failed', '✖', {
+          duration: 3000,
+          panelClass: ['snackbar-error'],
+          horizontalPosition: 'end',
+          verticalPosition: 'bottom'
+        });
       }
     });
   }

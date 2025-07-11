@@ -4,7 +4,7 @@
     <div style="margin-right: 4rem;">
       <a [routerLink]="'/shop/' + track.id">
         <img
-          [src]="track.picture ? imageBaseUrl + track.picture : '/assets/discogs.png'"
+          [src]="getTrackImageUrl(imageBaseUrl, track.picture, track.id)"
           [alt]="track.name"
           class="img-fluid"
           style="max-width: 120px;"
@@ -19,7 +19,7 @@
       </a>
       <div><strong>Artist:</strong> {{ track.artist.artistName }}</div>
       <div><strong>Genre:</strong> {{ track.genre.name }}</div>
-      <div><strong>Duration:</strong> {{ track.duration }}</div>
+      <div><strong>Duration:</strong> {{ formatTime(track.duration) }}</div>
     </div>
 
     <!-- Buttons -->

@@ -8,9 +8,12 @@ import {ITrack} from "../shared/models/track";
 @Injectable({
   providedIn: 'root',
 })
-export class ImageUploadService {
+export class ImageService {
 
   private uploadBaseUrl = environment.uploadBaseUrl;
+
+  private trackCacheBusters = new Map<number, number>();
+  private artistCacheBusters = new Map<number, number>();
 
   constructor(private http: HttpClient) {}
 
@@ -26,6 +29,7 @@ export class ImageUploadService {
     return this.http.post<IArtist>(`${this.uploadBaseUrl}/artist/${id}`, formData, { headers }).pipe(
       map(response => {
         console.log('API Response:', response);
+        this.artistCacheBusters.set(id, Date.now());
         return response;
       })
     );
@@ -43,8 +47,33 @@ export class ImageUploadService {
     return this.http.post<ITrack>(`${this.uploadBaseUrl}/track/${id}`, formData, { headers }).pipe(
       map(response => {
         console.log('API Response:', response);
+        this.trackCacheBusters.set(id, Date.now());
         return response;
       })
     );
+  }
+
+  getTrackImageUrl(baseUrl: string, picture: string | null | undefined, trackId: number): string {
+    if (!picture) {
+      return '/assets/discogs.png';
+    }
+    const bust = this.trackCacheBusters.get(trackId) ?? 0;
+    return `${baseUrl}${picture}?v=${bust}`;
+  }
+
+  getArtistImageUrl(baseUrl: string, picture: string | null | undefined, artistId: number): string {
+    if (!picture) {
+      return '/assets/artist-placeholder.png';
+    }
+    const bust = this.artistCacheBusters.get(artistId) ?? 0;
+    return `${baseUrl}${picture}?v=${bust}`;
+  }
+
+  bustCacheForArtist(artistId: number): void {
+    this.artistCacheBusters.set(artistId, Date.now());
+  }
+
+  bustCacheForTrack(trackId: number): void {
+    this.trackCacheBusters.set(trackId, Date.now());
   }
 }

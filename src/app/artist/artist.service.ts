@@ -128,6 +128,7 @@ export class ArtistService {
         return response;
       }),
       catchError(error => {
+        console.log("In artist service failed to delete track with id: " + trackId);
         console.log(error);
         throw error;
       })

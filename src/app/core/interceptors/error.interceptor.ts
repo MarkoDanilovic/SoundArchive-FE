@@ -24,7 +24,7 @@ export class ErrorInterceptor implements HttpInterceptor {
               throw error.error;
 
             } else {
-              this.toastr.error(error.error.message, error.error.statusCode);
+              //this.toastr.error(error.error.message, error.error.statusCode);
             }
           }
           if (error.status === 401) {
@@ -32,7 +32,7 @@ export class ErrorInterceptor implements HttpInterceptor {
             this.toastr.error(error.error.message, error.error.statusCode);
           }
           if (error.status === 404) {
-            this.toastr.error("Not found");
+            //this.toastr.error("Not found");
             //this.router.navigateByUrl('/not-found');
           }
           if (error.status === 409) {

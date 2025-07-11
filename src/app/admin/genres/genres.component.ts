@@ -39,6 +39,10 @@ export class GenresComponent implements OnInit {
   }
 
   deleteGenre(id: number) {
+    if (!confirm('Are you sure you want to delete this genre?')) {
+      return;
+    }
+
     this.adminService.deleteGenre(id).subscribe({
       next: () => this.genres = this.genres.filter(g => g.id !== id),
       error: err => console.error('Failed to delete genre', err)

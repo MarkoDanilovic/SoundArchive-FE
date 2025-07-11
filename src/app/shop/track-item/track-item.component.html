@@ -1,11 +1,12 @@
 <div class="card h-100 shadow-sm">
-  <img src="{{ track.picture ? imageBaseUrl + track.picture : '/assets/discogs.png' }}" alt="{{track.name}}" class="img-fluid">
+  <img src="{{ getTrackImageUrl(imageBaseUrl, track.picture, track.id) }}" alt="{{track.name}}" class="img-fluid">
   <div class="card-body d-flex flex-column">
     <a >
       <h6 class="text-uppercase" routerLink="/shop/{{track.id}}">{{track.name}}</h6>
     </a>
     <span class="mb-2">Artist: {{track.artist.artistName}}</span>
-    <span class="mb-2">Duration: {{track.duration}}</span>
+    <span class="mb-2">Genre: {{track.genre.name}}</span>
+    <span class="mb-2">Duration: {{ formatTime(track.duration) }}</span>
 <!--    <span class="mb-2">{{track.price | currency}}</span>-->
 
 

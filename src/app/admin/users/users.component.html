@@ -48,10 +48,10 @@
   <ng-container matColumnDef="actions">
     <th mat-header-cell *matHeaderCellDef> Actions </th>
     <td mat-cell *matCellDef="let user">
-      <button mat-icon-button color="warn" (click)="toggleBanUser(user)">
-        <mat-icon>{{ user.active ? 'block' : 'lock_open' }}</mat-icon>
+      <button mat-icon-button color="warn" (click)="toggleBanUser(user)" [matTooltip]="user.active ? 'Ban' : 'Unban'">
+        <mat-icon>{{ user.active ? 'lock_outline ' : 'lock_open' }}</mat-icon>
       </button>
-      <button mat-icon-button color="warn" (click)="deleteUser(user.id)">
+      <button mat-icon-button color="warn" (click)="deleteUser(user.id)" matTooltip="Delete">
         <mat-icon>delete</mat-icon>
       </button>
     </td>

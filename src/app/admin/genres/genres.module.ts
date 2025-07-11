@@ -7,19 +7,21 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatTableModule} from "@angular/material/table";
 import {MatButtonModule} from "@angular/material/button";
 import {FormsModule} from "@angular/forms";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 
 @NgModule({
   declarations: [
     GenresComponent
   ],
-  imports: [
-    CommonModule,
-    GenresRoutingModule,
-    MatIconModule,
-    MatTableModule,
-    MatButtonModule,
-    FormsModule
-  ]
+    imports: [
+        CommonModule,
+        GenresRoutingModule,
+        MatIconModule,
+        MatTableModule,
+        MatButtonModule,
+        FormsModule,
+        MatTooltipModule
+    ]
 })
 export class GenresModule { }

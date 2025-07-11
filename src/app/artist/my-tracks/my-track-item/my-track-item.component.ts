@@ -8,6 +8,7 @@ import {environment} from "../../../../environments/environment";
 import {ConfirmationDialogComponent} from "../../../shared/confirmation-dialog/confirmation-dialog.component";
 import {ArtistService} from "../../artist.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {ImageService} from "../../../core/image.service";
 
 @Component({
   selector: 'app-my-track-item',
@@ -25,11 +26,25 @@ export class MyTrackItemComponent implements OnInit {
 
   artistId: number;
 
-  constructor(public dialog: MatDialog, private artistService: ArtistService, private snackBar: MatSnackBar) {
+  cacheBuster = new Date().getTime();
+
+  constructor(public dialog: MatDialog,
+              private artistService: ArtistService,
+              private snackBar: MatSnackBar,
+              private imageService: ImageService) {
     this.artistId = Number(localStorage.getItem('currentUserArtistId'));
   }
 
   ngOnInit(): void {
+  }
+
+  get displayImageUrl(): string {
+    if (this.track?.picture) {
+      // cache-busting
+      return `${this.imageBaseUrl}${this.track.picture}?v=${this.cacheBuster}`;
+    } else {
+      return '/assets/discogs.png';
+    }
   }
 
   openUpdateTrackDialog(): void {
@@ -41,6 +56,7 @@ export class MyTrackItemComponent implements OnInit {
     dialogRef.afterClosed().subscribe((updatedTrack: ITrack | null) => {
       if (updatedTrack) {
         this.track = updatedTrack;
+        this.cacheBuster = new Date().getTime();
         console.log('Updated Track: ', updatedTrack);
       }
     });
@@ -66,18 +82,36 @@ export class MyTrackItemComponent implements OnInit {
   deleteTrack() {
     this.artistService.deleteTrack(this.track.id).subscribe({
       next: () => {
-        this.snackBar.open(`"${this.track.name}" was deleted successfully.`, 'Close', {
+        this.snackBar.open(`Track successfully deleted`, '✖', {
           duration: 3000,
+          panelClass: ['snackbar-success'],
+          horizontalPosition: 'end',
+          verticalPosition: 'bottom'
         });
         this.itemRemoved.emit();
       },
       error: (err) => {
         console.error('Failed to delete track', err);
-        this.snackBar.open(`Failed to delete "${this.track.name}". Please try again.`, 'Close', {
-          duration: 4000,
+        this.snackBar.open('Failed to delete track', '✖', {
+          duration: 3000,
+          panelClass: ['snackbar-error'],
+          horizontalPosition: 'end',
+          verticalPosition: 'bottom'
         });
       }
     });
   }
 
+  formatTime(seconds: number): string {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    const paddedMins = mins < 10 ? '0' + mins : mins;
+    const paddedSecs = secs < 10 ? '0' + secs : secs;
+    return `${paddedMins}:${paddedSecs}`;
+  }
+
+  getTrackImageUrl(baseUrl: string, picture: string | null | undefined, trackId: number): string {
+
+    return this.imageService.getTrackImageUrl(baseUrl, picture, this.track.id);
+  }
 }

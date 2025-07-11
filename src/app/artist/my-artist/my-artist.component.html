@@ -4,7 +4,7 @@
   <div class="row">
     <div class="col-md-4">
       <img
-        [src]="artistData?.picture ? imageBaseUrl + artistData.picture : '/assets/discogs.png'"
+        [src]="getArtistImageUrl(imageBaseUrl, artistData.picture, artistData.id)"
         alt="{{ artistData?.artistName }}"
         class="img-fluid w-100">
     </div>

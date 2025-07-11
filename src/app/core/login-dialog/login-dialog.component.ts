@@ -8,6 +8,7 @@ import { MatDialogRef } from "@angular/material/dialog";
 import {LoggingService} from "../logging.service";
 import { Router } from "@angular/router";
 import { IUser } from "../../shared/models/user";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-login-dialog',
@@ -18,6 +19,7 @@ import { IUser } from "../../shared/models/user";
 export class LoginDialogComponent implements OnInit {
 
   invalidLogin: boolean;
+  errorMessage = '';
 
   userjson = '';
 
@@ -27,21 +29,12 @@ export class LoginDialogComponent implements OnInit {
     private httpClient: HttpClient,
     private logService: LoggingService,
     private dialogRef: MatDialogRef<LoginDialogComponent>,
+    private snackBar: MatSnackBar,
     private router: Router
   ) { }
 
   ngOnInit(): void {
   }
-
-
-  // login(form: NgForm){
-  //
-  //   this.user.username = form.value.username
-  //   this.user.password = form.value.password
-  //
-  //   this.logService.login(this.user)
-  //
-  // }
 
   login(form: NgForm) {
     if (form.invalid) return;
@@ -52,12 +45,27 @@ export class LoginDialogComponent implements OnInit {
     this.logService.login(this.user).subscribe({
       next: ({ user, token }) => {
         this.invalidLogin = false;
+        this.errorMessage = '';
         this.dialogRef.close();
         this.router.navigateByUrl('/shop');
         location.reload();
+        // this.snackBar.open(`Login successful`, '✖', {
+        //   duration: 3000,
+        //   panelClass: ['snackbar-success'],
+        //   horizontalPosition: 'end',
+        //   verticalPosition: 'bottom'
+        // });
       },
       error: (err) => {
         this.invalidLogin = true;
+        if(err.error.includes('banned')) this.errorMessage = 'User has been banned!';
+        else this.errorMessage = 'Invalid username or password';
+        this.snackBar.open('Login failed', '✖', {
+          duration: 3000,
+          panelClass: ['snackbar-error'],
+          horizontalPosition: 'end',
+          verticalPosition: 'bottom'
+        });
         console.error('Login error', err);
       }
     });

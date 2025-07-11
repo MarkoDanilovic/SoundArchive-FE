@@ -15,6 +15,7 @@ import {ErrorInterceptor} from "./core/interceptors/error.interceptor";
 import {ToastrModule} from "ngx-toastr";
 import {SharedModule} from "./shared/shared.module";
 import {GuardGuard} from "./shared/guard.guard";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 
 export function tokenGetter(){
@@ -39,6 +40,7 @@ export function tokenGetter(){
     HomeModule,
     FormsModule,
     ReactiveFormsModule,
+    MatSnackBarModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter
